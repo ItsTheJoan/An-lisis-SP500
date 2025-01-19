@@ -6,8 +6,10 @@ from matplotlib import pyplot as plt
 
 
 # Descargar los precios de cierre del activo
-monthly_data = yf.download(tickers='^GSPC', start='1999-12-31', end='2025-01-01', interval='1mo')['Close']
-monthly_data.to_excel('data.xlsx')
+data = yf.download(tickers='^GSPC', start='1999-12-31', end='2025-01-01', interval='1mo')['Close']
+monthly_data = data['^GSPC'].resample('M').last()
+
+data.to_excel('data.xlsx')
 
 # Mover el índice a la columna de fecha
 monthly_data = monthly_data.reset_index()  
@@ -17,7 +19,7 @@ monthly_data['Date'] = pd.to_datetime(monthly_data['Date'])
 monthly_data['Cambio (%)'] = monthly_data['^GSPC'].pct_change()*100
 
 # Obtener una columna con el mes (número) para cada observación
-monthly_data['Mes'] = monthly_data['Date'].dt.month.astype(int) -1
+monthly_data['Mes'] = monthly_data['Date'].dt.month.astype(int)
 
 # Histograma de los retornos mensuales
 monthly_data['Cambio (%)'].hist(bins= 20) # 20 columnas para entender mejor la distribución, sin exceder el limite de los datos
@@ -29,7 +31,7 @@ plt.xlabel('Cambio Mensual (%)')
 plt.grid() # Eliminar los grids
 plt.yticks([]) # Eliminar las etiquetas del eje Y
 #Comentario sobre media y desviación
-plt.text(0.98, 0.95, f'Media: 0.58% \n \nDesviación \nestándar: 4.40%', color='black', ha='right', va='top', fontsize=12, style='italic', transform=plt.gca().transAxes)
+plt.text(0.98, 0.95, f'Media: 0.58% \n \nDesviación \nestándar: 4.41%', color='black', ha='right', va='top', fontsize=12, style='italic', transform=plt.gca().transAxes)
 plt.savefig('total_histogram.PNG')
 
 # Gráfica de barras por mes
@@ -56,7 +58,7 @@ plt.savefig('monthly_mean.png')
 # Gráfico con la evolución para las últimas 13 observaciones (2024)
 monthly_data.set_index('Date', inplace= True)
 plt.figure(figsize=(10, 6))
-monthly_data['^GSPC'][-13:-1].plot(kind='line') # Tomar solo las últimas 12 observaciones (1 año)
+monthly_data['^GSPC'][-12:].plot(kind='line') # Tomar solo las últimas 12 observaciones (1 año)
 plt.title('Evolución del SP500 en 2024')
 plt.xlabel('Fecha')
 plt.savefig('evolution_2024.png')
@@ -65,7 +67,7 @@ plt.savefig('evolution_2024.png')
 ###### Análisis de Correlación
 
 # Descargar datos de otros futuros
-tickers = ['^GSPC', 'CL=F', 'GC=F', 'NG=F', '^IXIC', 'ZN=F'] # ['Petroleo', 'Oro', 'Gas Natural', 'USDCOP', 'Nasdaq', 'Tesoros 10 años']
+tickers = ['^GSPC', 'CL=F', 'GC=F', 'NG=F', 'ZN=F'] # ['Petroleo', 'Oro', 'Gas Natural', 'USDCOP', 'Nasdaq', 'Tesoros 10 años']
 data_corr = yf.download(tickers= tickers, start= '2000-01-01', end = dt.date.today(), interval= '1mo')['Close']
 
 
@@ -78,7 +80,7 @@ correlations
 
 
 # Tabla de correlacion
-names = ['Petroleo', 'Oro', 'Gas Natural', 'Tesoros \n10 años', 'Nasdaq' ] # nombres para las etiquetas
+names = ['Petroleo', 'Oro', 'Gas Natural', 'Tesoros \n10 años' ] # nombres para las etiquetas
 
 
 plt.figure(figsize=(10, 6))  # Ajusta el tamaño de la figura si lo necesitas
