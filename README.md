@@ -7,7 +7,7 @@ pip install yfinance pandas seaborn matplotlib
 ## Descripción del Código
 
 1. **Descarga de datos históricos del indice**:
-   - Se descarga la serie histórica mensual de precios de cierre de los futuros del S&P 500 (`^GSPC`) desde el 31 de diciembre de 1999 hasta la fecha actual.
+   - Se descarga la serie histórica mensual de precios de cierre del S&P 500 (`^GSPC`) desde el 31 de diciembre de 1999 hasta el 01 de enero de 2025.
 
 2. **Cálculo de cambios porcentuales mensuales**:
    - Se calculan los retornos mensuales como el cambio porcentual entre precios consecutivos.
